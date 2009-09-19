@@ -1,0 +1,7 @@
+Hi!
+
+This is a text file that does not contain image data. This is here only to
+test that the ImageUtils.loadImage behaves as expected when trying to load
+files that do not contain valid image data.
+
+Thanks for the interest in this file!

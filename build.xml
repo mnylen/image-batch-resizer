@@ -1,0 +1,69 @@
+<project name="ImageBatchResizer" default="compile">
+    <property name="src" location="src" />
+    <property name="bin" location="bin" />
+    <property name="dist" location="dist" />
+    <property name="lib" location="lib" />
+    <property name="tests.out" location="out" />
+
+    <path id="classpath">
+        <pathelement location="${lib}/ant-junit.jar" />
+        <pathelement location="${lib}/junit.jar" />
+    </path>
+
+    <target name="init">
+        <mkdir dir="${bin}" />
+    </target>
+
+    <target name="compile" depends="init" description="compile the source">
+        <javac srcdir="${src}"
+               destdir="${bin}"
+               classpathref="classpath" />
+    </target>
+
+    <target name="dist" depends="compile" description="creates a exectuable distribution of the project">
+        <mkdir dir="${dist}" />
+
+        <jar destfile="${dist}/ImageBatchResizer.jar">
+            <fileset dir="${bin}"
+                     excludes="**/*Tests.class" />
+
+            <manifest>
+                <attribute name="Built-By" value="${user.name}" />
+                <attribute name="Implementation-Vendor" value="Mikko Nylen" />
+                <attribute name="Implementation-Title" value="Image Batch Resizer" />
+                <attribute name="Implementation-Version" value="1.0" />
+                <attribute name="Main-Class" value="mnylen.imagebatchresizer.gui.ImageBatchResizerApplication" />
+            </manifest>
+        </jar>
+    </target>
+
+    <target name="sourcedist" depends="compile" description="creates a source distribution">
+        <mkdir dir="${dist}" />
+
+        <zip destfile="${dist}/ImageBatchResizer-source.zip">
+            <zipfileset dir="src" prefix="imagebatchresizer/src" />
+            <zipfileset dir="testimages" prefix="imagebatchresizer/testimages" />
+            <zipfileset dir="." includes="build.xml" prefix="imagebatchresizer/" />
+        	<zipfileset dir="lib" includes="junit.jar" prefix="imagebatchresizer/lib/" />
+        </zip>
+    </target>
+
+    <target name="test" depends="compile" description="runs the JUnit tests">
+        <mkdir dir="${tests.out}" />
+
+        <junit printsummary="yes" haltonfailure="no">
+            <classpath>
+                <pathelement location="${lib}/junit.jar" />
+                <pathelement path="${bin}" />
+            </classpath>
+
+            <formatter type="plain" />
+
+            <batchtest todir="${tests.out}">
+                <fileset dir="${src}">
+                    <include name="**/*Tests.java" />
+                </fileset>
+            </batchtest>
+        </junit>
+    </target>
+</project>
